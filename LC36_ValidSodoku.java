@@ -2,89 +2,23 @@ import java.util.*;
 
 public class LC36_ValidSodoku {
     public boolean isValidSudoku(char[][] board) {
-        int rStart = 0;
-        int cStart = 0;
+        boolean[][] rows = new boolean[9][9];
+        boolean[][] cols = new boolean[9][9];
+        boolean[][] boxes = new boolean[9][9];
 
-        for (int type = 1; type < 10; type++){
-            switch(type){
-                case 1:
-                    break;
-                case 2:
-                    rStart = 3;
-                    cStart = 0;
-                    break;
-                case 3:
-                    rStart = 6;
-                    cStart = 0;
-                    break;
-                case 4:
-                    rStart = 0;
-                    cStart = 3;
-                    break;
-                case 5:
-                    rStart = 3;
-                    cStart = 3;
-                    break;
-                case 6:
-                    rStart = 6;
-                    cStart = 3;
-                    break;
-                case 7:
-                    rStart = 0;
-                    cStart = 6;
-                    break;
-                case 8:
-                    rStart = 3;
-                    cStart = 6;
-                    break;
-                case 9:
-                    rStart = 6;
-                    cStart = 6;
-            }
+        for (int r = 0; r < 9; r++){
+            for (int c = 0; c < 9; c++){
+                char ch = board[r][c];
+                if (ch == '.') continue;
 
+                int d = ch - '1'; // Convert char num to int for use as index in boolean arrays
+                int b = (r / 3) * 3 + (c / 3);
 
-            HashSet<Character> set = new HashSet<>();
-            for (int i = 0; i < 9; i++){
-                set.add((char) ('1' + i));
-            }
-            for (int row = rStart; row < rStart + 3; row++){
-                for (int col = cStart; col < cStart + 3; col++){
-                    if (!set.remove(board[row][col]) && board[row][col] != '.'){
-                        return false;
-                    }
-                }
+                if (rows[r][d] || cols[c][d] || boxes[b][d]) return false;
+
+                rows[r][d] = cols[c][d] = boxes[b][d] = true;
             }
         }
-
-        HashSet<Character> set;
-
-        // Do Rows
-        for (int row = 0; row < 9; row++){
-            set = new HashSet<>();
-            for (int i = 0; i < 9; i++){
-                set.add((char) ('1' + i));
-            }
-            for (int col = 0; col < 9; col++){
-                if (!set.remove(board[row][col]) && board[row][col] != '.'){
-                    return false;
-                }
-            }
-        }
-
-        // Do Cols
-        for (int col = 0; col < 9; col++){
-            set = new HashSet<>();
-            for (int i = 0; i < 9; i++){
-                set.add((char) ('1' + i));
-            }
-            for (int row = 0; row < 9; row++){
-                if (!set.remove(board[row][col]) && board[row][col] != '.'){
-                    return false;
-                }
-            }
-        }
-
-
         return true;
     }
 }
