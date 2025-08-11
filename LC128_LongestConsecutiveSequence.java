@@ -1,42 +1,25 @@
-import java.util.ArrayList;
+import java.util.*;
 
 public class LC128_LongestConsecutiveSequence {
     public int longestConsecutive(int[] nums) {
-        if (nums.length <= 1){
-            return nums.length;
+
+        Set<Integer> set = new HashSet<>();
+
+        for (int num: nums){
+            set.add(num);
         }
 
-        ArrayList<Integer> sortedNums = new ArrayList<>();
-        for (int num : nums){
-            sortedNums.add(num);
-        }
+        int longest = 0;
 
-        sortedNums.sort((a, b) -> a - b);
-
-        ArrayList<Integer> longest = new ArrayList<>();
-        ArrayList<Integer> current = new ArrayList<>();
-
-        current.add(sortedNums.getFirst());
-        sortedNums.removeFirst();
-
-        for (Integer num : sortedNums){
-            if (num == current.getLast() + 1){
-                current.add(num);
-                if (current.size() >= longest.size()){
-                    longest = current;
+        for (int num : set){
+            if (!set.contains(num-1)){
+                int length = 1;
+                while (set.contains((num + length))){
+                    length++;
                 }
-            } else if (num.equals(current.getLast())) {
-                continue;
-            } else {
-                current = new ArrayList<>();
-                current.add(num);
+                longest = Math.max(longest, length);
             }
         }
-
-        if (current.size() >= longest.size()){
-            longest = current;
-        }
-
-        return longest.size();
+         return longest;
     }
 }
