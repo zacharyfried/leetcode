@@ -1,25 +1,32 @@
 public class LC11_ContainerWithMostWater {
     public int maxArea(int[] height) {
+
+        int l = 0, r = height.length - 1;
         int max = 0;
 
-        for (int i = 0; i < height.length - 1; i++){
-            int j;
-            if (height[i] == 0){
-                continue;
-            } else {
-                j = (max / height[i]);
+        while (l < r){
+            int shorterHeight = height[l] < height[r] ? height[l] : height[r];
+            int curr = shorterHeight * (r - l);
+            if (curr > max){
+                max = curr;
             }
 
-            for (j = j; j < height.length; j++){
-                int distance = j - i;
-                int shorterHeight = height[i] < height[j] ? height[i] : height[j];
-                int currVol = distance * shorterHeight;
-                if (max < currVol) {
-                    max = currVol;
+            if (height[l] < height[r]){
+                int lastL = height[l];
+                while (l < r && height[l] <= lastL){
+                    l++;
+                }
+            } else {
+                int lastR = height[r];
+                while (l < r && height[r] <= lastR){
+                    r--;
                 }
             }
+
         }
         return max;
+
+
     }
 
     public static void main(String[] args){
