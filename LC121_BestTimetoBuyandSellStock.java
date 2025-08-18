@@ -1,21 +1,17 @@
 public class LC121_BestTimetoBuyandSellStock {
     public int maxProfit(int[] prices) {
-        int buyDate = -1;
-        int sellDate = -1;
-        int maxProfit = -1;
+        int l = 0;
+        int r = 0;
+        int maxProfit = 0;
 
-        for (int i = 0; i < prices.length - 1; i++){
-            for (int j = i + 1; j < prices.length; j++){
-                if (prices[j] - prices[i] > maxProfit){
-                    buyDate = i;
-                    sellDate = j;
-                    maxProfit = prices[j] - prices[i];
-                }
+        while (r < prices.length){
+            if(prices[l] < prices[r]){
+                int curProfit = prices[r] - prices[l];
+                maxProfit = Math.max(maxProfit, curProfit);
+            } else {
+                l = r;
             }
-        }
-
-        if (maxProfit <= 0){
-            maxProfit = 0;
+            r++;
         }
         return maxProfit;
     }
