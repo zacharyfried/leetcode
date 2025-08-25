@@ -1,42 +1,51 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.TreeSet;
+import java.util.*;
 
 public class LC239_SlidingWindowMaximum {
     public int[] maxSlidingWindow(int[] nums, int k) {
-        ArrayList<Integer> window = new ArrayList<>();
-        ArrayList<Integer> maxList = new ArrayList<>();
-
-        if (nums.length <= k){
-            for (int num : nums){
-                maxList.add(num);
-
-            }
-            int max = Collections.max(maxList);
-            return new int[]{max};
-        }
-
+        int[] output = new int[nums.length - k + 1];
+        Deque<Integer> que = new LinkedList<>();
         int l = 0;
-        int r = k - 1;
-
-        // Initial loading
-        for (int i = 0; i < r; i++){
-            window.add(nums[i]);
-        }
+        int r = 0;
 
         while (r < nums.length){
-            window.add(nums[r]);
-            maxList.add(Collections.max(window));
-            window.remove(0);
+            // Remove from the back (right side) of the deque anything
+            // smaller than what we are about to add since this isn't
+            // useful to compare going forward
+            while(!que.isEmpty() && nums[que.getLast()] < nums[r]){
+                que.removeLast();
+            }
+
+            // Add index r to back of deque (right side)
+            que.addLast(r);
+
+            // Since the values in the que are indices, and in
+            // increasing recentness as one goes to the right,
+            // if the left most index (the one about to leave
+            // the window as we shift it) is still in the deque,
+            // remove it
+            if (l > que.getFirst()){
+                que.remove();
+            }
+
+            // If we have incremented r enough that we are at window size,
+            // we need to shift the window instead of just adding r
+            if ((r + 1) >= k){
+                // The front of the deque is going to be the largest
+                // nums[l[ value, since more recent larger vals pop
+                // everything and they become left most, or if they
+                // are smaller they just get added to the right
+                output[l] = nums[que.getFirst()];
+                l++;
+            }
+
             r++;
         }
 
-        int[] res = new int[maxList.size()];
-        for (int i = 0; i < res.length; i++){
-            res[i] = maxList.get(i);
-        }
-        return res;
+        return output;
+
+
+
+
     }
 
     public static void main(String[] args){
