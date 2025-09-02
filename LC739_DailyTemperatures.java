@@ -4,16 +4,20 @@ public class LC739_DailyTemperatures {
     public int[] dailyTemperatures(int[] temperatures) {
         int[] res = new int[temperatures.length];
 
+        Stack<int[]> stack = new Stack<>(); // [temp, index]
+
         for (int i = 0; i < temperatures.length; i++){
-            res[i] = 0;
-            int j = i + 1;
-            while(j < temperatures.length && temperatures[i]>temperatures[j]){
-                j++;
+            int t = temperatures[i];
+
+            while (!stack.isEmpty() && t > stack.peek()[0]){
+                // Save pair to variable so we can access index
+                int[] pair = stack.pop();
+
+                res[pair[1]] = i - pair[1];
             }
-            res[i] = j == temperatures.length ? 0 : j - i;
+            stack.push(new int[]{t, i});
+
         }
-
-
         return res;
     }
 }
